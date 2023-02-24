@@ -12,16 +12,31 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+import dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dotenv.load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": "127.0.0.1",
+        "PORT": 5432,
+    }
+}
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-e91823y78dgasdas89cvyxz76the912j321321-cx9!!#1232111!!!"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,9 +54,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = [
-    "rest_framework",
-]
+THIRD_PARTY_APPS = ["rest_framework", "drf_spectacular"]
 
 MY_APPS = [
     "users",
@@ -119,6 +132,15 @@ SIMPLE_JWT = {
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 2,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "API BandKamp",
+    "DESCRIPTION": "Api desenvolvida para registro de músicas, álbuns e músicos.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # OTHER SETTINGS
 }
 
 # Internationalization
